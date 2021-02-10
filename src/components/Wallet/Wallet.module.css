@@ -1,0 +1,12 @@
+.Wallet {
+    width: 40%;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    align-items: stretch;
+}
+
+.Wallet table {
+    width: 100%;
+    text-align: left;
+}
