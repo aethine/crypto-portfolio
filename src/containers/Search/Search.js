@@ -10,18 +10,23 @@ class search extends Component {
         coinList: [],
         formValue: null,
         matchedCoins: null,
-        touched: false,
+        coinsLoaded: false,
         error: null,
     }
 
     //words to filter out of main list: set, long, short,
     componentDidMount() {
-        axios.get('https://min-api.cryptocompare.com/data/all/coinlist')
+        axios.get('https://crypto-portfolio-70bc1-default-rtdb.firebaseio.com/coinList.json')
             .then(response =>{
-                console.log(Object.values(response.data.Data));
-                const coinList = Object.values(response.data.Data);
+                console.log(response);
+                let coinList = Object.values(response.data);
+                coinList = coinList.sort((a,b) => a.SortOrder - b.SortOrder);
                 // const filteredList = this.filterFetchedCoins(response.data);
-                this.setState({ coinList });
+                console.log(coinList);
+                // axios.put("https://crypto-portfolio-70bc1-default-rtdb.firebaseio.com/coinList.json", coinList)
+                //     .then(response => console.log(response))
+                //     .catch(error => console.log(error));
+                this.setState({ coinList, coinsLoaded: true });
             })
             .catch(error=>{
                 this.setState({error});
@@ -40,10 +45,16 @@ class search extends Component {
 
     filterMatches = (wordToMatch, coins) => {
         let regex = new RegExp(wordToMatch, 'gi');
-        const matchedCoins = this.state.coinList.filter(coin => {
+        let matchedCoins = this.state.coinList.filter(coin => {
             return coin.Symbol.match(regex);
         });
+        matchedCoins = this.truncateMatches(matchedCoins)
         this.setState({matchedCoins});
+    }
+
+    truncateMatches = (list) => {
+        list.length = 100;
+        return list;
     }
 
     loadCoin = (id) => {
@@ -52,27 +63,20 @@ class search extends Component {
     }
 
     handleChange = (event) => {
-        if(event.target.value.length >= 3) {
-            this.setState({formValue: event.target.value, touched: true});
-            this.filterMatches(event.target.value, this.state.coinList)
-        }
+        this.setState({formValue: event.target.value});
+        this.filterMatches(event.target.value, this.state.coinList)
     }
 
     render () {
         let matchedList = null;
-        if (this.state.touched) {
-            console.log('touched');
-            if (this.state.error) {
-                matchedList = <p style={{ textAlign: 'center' }}>Results can't be loaded.</p>;
-            } else {
-                matchedList = <div><Spinner /></div>
-            }
-            console.log(matchedList);
+        if(this.state.coinsLoaded){
+            let coinList = [...this.state.coinList];
+            let truncatedCoinList = this.truncateMatches(coinList);
+            matchedList = <SearchResults matchedCoins={truncatedCoinList} />;
         }
 
         if (this.state.matchedCoins) {
             matchedList = <SearchResults matchedCoins={this.state.matchedCoins} />
-            console.log(matchedList);
         }
         
         return (

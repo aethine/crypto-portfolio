@@ -13,7 +13,7 @@ const toolbar = (props) => (
         <div className={classes.MainItems}>
             <DrawerToggle clicked={props.openSideDrawer} />
             <div className={classes.Logo}>
-                <p style={{"margin-top": "10px"}}>Logo</p>
+                <p style={{marginTop: "10px"}}>Logo</p>
             </div>
         </div>
         <nav className={classes.DesktopOnly}>
