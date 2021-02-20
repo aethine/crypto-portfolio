@@ -11,7 +11,7 @@ const searchResults = (props) => {
         const linkString = `/trade?symbol=${coin.Symbol}&name=${coin.CoinName}`
         coinList.push(
             <Link key={i} to={{ pathname: '/trade', state: { symbol: coin.Symbol, coinName: coin.CoinName} }}  style={{textDecoration: 'none'}}>
-                <li id={coin.CoinName}><strong>{coin.Symbol}</strong> - {coin.CoinName}</li>
+                <li id={coin.CoinName}><strong>{coin.Symbol}</strong> - ${coin.Price}</li>
             </Link>
         );
     });

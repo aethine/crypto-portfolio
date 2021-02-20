@@ -27,8 +27,8 @@ class Trade extends Component {
     }
 
     loadCoin(newSymbol, newCoinName) {
-        const symbol = newSymbol || this.props.location.state.symbol;
-        const coinName = newCoinName || this.props.location.state.coinName;
+        const symbol = newSymbol || this.props.location.state.symbol || this.state.symbol;
+        const coinName = newCoinName || this.props.location.state.coinName || this.state.coinName;
         let wallet, currentPrice;
         // axios.get("https://api.cryptowat.ch/markets/kraken/btceur/price")
         axios.get("https://min-api.cryptocompare.com/data/price?fsym=" + symbol + "&tsyms=USD&api_key=f22619fe0a6172deeddfe6731c7afcb34f1a0f5ea0f4a6b519449f81ad0f69f0")
